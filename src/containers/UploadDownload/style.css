@@ -1,0 +1,21 @@
+.ant-layout {
+    background-color: #fff !important;
+    height: 100%;
+}
+
+.gutter-row-upload {
+    height: 100%;
+}
+
+.gutter-row-download {
+    height: 100%;
+    border-left: 1px dashed #c5cec7; 
+}
+
+.ant-spin-nested-loading {
+    height: 100%;
+}
+
+.ant-spin-container {
+    height: 100%;
+}
