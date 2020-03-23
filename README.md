@@ -1,4 +1,4 @@
-# ![Skylin Logo](./assets/logo/skylin.png) [![Built with](./assets/sia/built-with-Sia-color.svg)](http://sia.tech)
+# ![Skylin Logo](./assets/logo/skylin.png) [![Built with](./assets/sia/built-with-Sia-color.svg | width=300)](http://sia.tech)
 
 # Skylin
 
