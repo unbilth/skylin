@@ -1,4 +1,4 @@
-# ![Skylin Logo](./assets/logo/skylin.png){: width=250 height=250} [![Built with](./assets/sia/built-with-Sia-color.svg =250x250){: width=250 height=250}](http://sia.tech)
+# <img src="./assets/logo/skylin.png" alt="Skylink logo" width="250" height="250"> <img src="./assets/sia/built-with-Sia-color.svg" alt="Built with sia" width="250" height="250">
 
 # Skylin
 
