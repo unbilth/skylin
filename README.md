@@ -33,7 +33,7 @@ npm install
 Run the dev environment :
 
 ```
-npm run postpackage
+npm start
 ```
 
 ## Build instructions
