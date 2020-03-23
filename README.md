@@ -1,45 +1,31 @@
-![Skylin Screenshot](/readme-bg.png)
+# ![Skylin Logo](./assets/logo/skylin.png) [![Built with](./assets/built-with-Sia-color.svg)](http://sia.tech)
 
+# Skylin
 
-# skylin
+Skylin is an open source Electron-base app for decentralized file uploading/downloading on the skynet/sia network.
 
-Skylin is an Electron application that provides a user interface for uploading and downloading on the skynet/sia network. It allows you to encrypt your files with PGP(openPGP) symmetric and asymmetric encryption, you can also save your favorites skylink in favorites. A history is also available. 
+![Skylin Screenshot](./assets/readme-bg.png)
+
+It is written in Javascript and uses React.
+Skylin allows you to upload files to skynet with symmetric/asymmetric (openPGP) encryption and more.
+It's an independent project with its ongoing development.
 
 ## Notes
-- Skylin is for the moment only compatible with macos
+- Skylin is for the moment only compatible with macOS
 - PGP private keys are totally secure since they are encrypted with a passphrase that only you have in mind.
-- Keep in mind that this is a version that was developed quickly for the skynet/SIA hackathon. So there may be bugs.
-- For reasons of speed, I have neither commented the code nor added the unit tests.
 - There will soon be a global optimization of the app architecture.
 
 ## Architecture
-- Node
 - Npm
+- Node
 - Electron
 - React
+- Webpack
 - OpenPGP
 - Ant-Design
+- Jest
 
-## Setting up the developer environment
-To get started, clone the repo into your environment.
-
-```
-git clone https://github.com/unbilth/skylin.git
-```
-
-Once the repo is cloned, we need to install all of the external packages. To do this, `cd` into your project directory and run
-```
-npm install
-```
-
-Now you can run the dev environment : 
-
-```
-npm start
-```
-
-If you want to build :
-
+## Build instructions
 ```
 npm run build
 ```
@@ -47,3 +33,14 @@ npm run build
 npm run postpackage
 ```
 
+## Contributing
+Please see the [contributing guidelines](./CONTRIBUTING.md)
+
+## Community
+Join the [sia discord](https://discord.gg/sia) if you'd like to get more involved with Skylin. 
+You can ask for help, discuss features you'd like to see, and a lot more. 
+We'd love to have your help so that we can continue improving Skylin.
+
+Help us translate Skylin to your language by submitting translations at https://www.transifex.com/skylin/skylin/
+
+Follow @skylin on Twitter for important news and announcements.
