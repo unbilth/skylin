@@ -38,7 +38,7 @@ For everything you'd need to get started, check out https://www.transifex.com/sk
 
 ## Getting started
 * Make sure you have a [GitHub account](https://github.com/join).
-* Submit a [ticket](https://github.com/skylin/skylin/issues) for your issue if one does not already exist. Please include the Skylin version, operating system, and steps to reproduce the issue.
+* Submit a [ticket](https://github.com/unbilth/skylin/issues) for your issue if one does not already exist. Please include the Skylin version, operating system, and steps to reproduce the issue.
 * Fork the repository on GitHub.
 * For changes to JavaScript files, we recommend installing a [Standard](http://standardjs.com/) plugin for your preferred text editor in order to ensure code style consistency.
 
@@ -47,7 +47,7 @@ For everything you'd need to get started, check out https://www.transifex.com/sk
 While logged into your GitHub account, navigate to the [Skylin repository](https://github.com/unbilth/skylin.git)
 and click the 'Fork' button in the upper righthand corner.  Your account now 
 has a 'forked' copy of the original repo at 
-`https://github.com/<your GitHub username>/Skylin`.
+`https://github.com/<your GitHub username>/skylin`.
 
 Change to that directory and set up your fork as a git [remote](https://git-scm.com/book/en/v2/Git-Basics-Working-with-Remotes):
 
