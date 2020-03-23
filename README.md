@@ -33,6 +33,17 @@ npm run build
 npm run postpackage
 ```
 
+## Setting up the developer environment
+```
+npm install
+```
+
+Run the dev environment :
+
+```
+npm run postpackage
+```
+
 ## Contributing
 Please see the [contributing guidelines](./CONTRIBUTING.md)
 
