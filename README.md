@@ -25,14 +25,6 @@ It's an independent project with its ongoing development.
 - Ant-Design
 - Jest
 
-## Build instructions
-```
-npm run build
-```
-```
-npm run postpackage
-```
-
 ## Setting up the developer environment
 ```
 npm install
@@ -40,6 +32,17 @@ npm install
 
 Run the dev environment :
 
+```
+npm run postpackage
+```
+
+## Build instructions
+```
+npm install
+```
+```
+npm run build
+```
 ```
 npm run postpackage
 ```
