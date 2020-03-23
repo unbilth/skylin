@@ -44,12 +44,12 @@ For everything you'd need to get started, check out https://www.transifex.com/sk
 
 ### Contribute to the codebase
 
-While logged into your GitHub account, navigate to the [Skylin repository][https://github.com/unbilth/skylin.git] 
+While logged into your GitHub account, navigate to the [Skylin repository](https://github.com/unbilth/skylin.git)
 and click the 'Fork' button in the upper righthand corner.  Your account now 
 has a 'forked' copy of the original repo at 
 `https://github.com/<your GitHub username>/Skylin`.
 
-Change to that directory and set up your fork as a git [remote][https://git-scm.com/book/en/v2/Git-Basics-Working-with-Remotes]:
+Change to that directory and set up your fork as a git [remote](https://git-scm.com/book/en/v2/Git-Basics-Working-with-Remotes):
 
 ```bash
 $ cd .../Folder/Skylin
@@ -72,7 +72,7 @@ There is a few tips we can suggest:
 ### Pull requests
 
 Once you've tested your new code and pushed changes to your fork, navigate to
-your fork at `https://github.com/<username>/Skylin` in your browser.  
+your fork at `https://github.com/<username>/skylin` in your browser.  
 Switch to the branch you've made changes on by selecting it from the list on 
 the upper left.  Then click 'New pull request' on the upper right.
 
