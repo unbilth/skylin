@@ -1,68 +1,63 @@
+const fs = require("fs")
 const skynet = require('@nebulous/skynet');
 const databaseService = require('./databaseService');
 const encryptorService = require('./encryptorService')
-const fs = require("fs")
 
 const db = new databaseService()
 const encryptor = new encryptorService()
+
 const homeDirectory = process.env['HOME']
 
 class DownloaderService {
 
-  async downloadFromSkynet(skylink, destination) {
+  async downloadFromSkynet(skylink, encryptionType, destination) {
     await skynet.DownloadFile(
       destination,
       skylink,
       skynet.DefaultDownloadOptions
-    );
-    return skylink
+    ).then(() => {
+      db.add('history', { skylink: skylink, encryption: encryptionType, type: 'download' })
+    });
   }
 
   async downloadFile(data) {
-    if (data.encryptionType === 'none') {
-      try {
-        const downloadFilePath = homeDirectory + '/Downloads/siaFile' + UUID()
-        const skylink = await this.downloadFromSkynet(data.skylink, downloadFilePath)
-        db.add('history', { skylink: data.skylink, encryption: data.encryptionType, type: 'download' })
-        return downloadFilePath
-      } catch (e) {
-        //throw e
-        return 'noneDownloadFailed'
-      }
-    } else if (data.encryptionType === 'symmetric') {
-      try {
-        const tmp = homeDirectory + '/Downloads/encryped_file' + UUID()
-        await this.downloadFromSkynet(data.skylink, tmp)
-        const decrypt = await encryptor.symmetricDecryption(tmp, data.password)
-        const decryptedFilePath = homeDirectory + '/Downloads/decrypted_file' + UUID()
-        fs.writeFileSync(decryptedFilePath, decrypt)
-        db.add('history', { skylink: data.skylink, encryption: data.encryptionType, type: 'download' })
-        fs.unlinkSync(tmp)
-        return decryptedFilePath
-      } catch (e) {
-        //throw e
-        return 'symmetricDownloadFailed'
-      }
-    } else if (data.encryptionType === 'asymmetric') {
-      try{
-        const currentKeys = db.get('currentKeys');
-        const tmp = homeDirectory + '/Downloads/encryped_file' + UUID()
-        await this.downloadFromSkynet(data.skylink, tmp)
-        fs.readFileSync(tmp)
+    const downloadedFilePath = homeDirectory + '/Downloads/siaFile' + UUID()
+    const tmpFilePath = homeDirectory + '/Downloads/encryped_file' + UUID()
 
-        const decrypt = await encryptor.asymmetricDecryption(tmp, currentKeys.privateKey, data.privateKeyPassphrase)
-        const decryptedFilePath = homeDirectory + '/Downloads/decrypted_file' + UUID()
-        fs.writeFileSync(decryptedFilePath, decrypt)
-        db.add('history', { skylink: data.skylink, encryption: data.encryptionType, type: 'download' })
-        fs.unlinkSync(tmp)
-        return decryptedFilePath
-      } catch(e){
-        //throw e
-        return 'asymmetricDownloadFailed'
-      }
+    switch(data.encryptionType) {
+      case 'none':
+        try {
+          await this.downloadFromSkynet(data.skylink, 'none', downloadedFilePath)
+          return downloadedFilePath
+        } catch (e) {
+          //throw e
+          return 'noneDownloadFailed'
+        }
+      case 'symmetric':
+        try {
+          await this.downloadFromSkynet(data.skylink, 'symmetric', tmpFilePath)
+          const decrypt = await encryptor.symmetricDecryption(tmpFilePath, data.password)
+          fs.writeFileSync(downloadedFilePath, decrypt)
+          fs.unlinkSync(tmpFilePath)
+          return downloadedFilePath
+        } catch (e) {
+          //throw e
+          return 'symmetricDownloadFailed'
+        }
+      case 'asymmetric':
+        try{
+          const currentKeys = db.get('currentKeys');
+          await this.downloadFromSkynet(data.skylink, 'asymmetric', tmpFilePath)
+          const decryptedFile = await encryptor.asymmetricDecryption(tmpFilePath, currentKeys.privateKey, data.privateKeyPassphrase)
+          fs.writeFileSync(downloadedFilePath, decryptedFile)
+          fs.unlinkSync(tmpFilePath)
+          return downloadedFilePath
+        } catch(e){
+          //throw e
+          return 'asymmetricDownloadFailed'
+        }
     }
   }
-
 }
 
 module.exports = DownloaderService
