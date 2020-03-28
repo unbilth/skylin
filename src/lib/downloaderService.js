@@ -40,7 +40,7 @@ class DownloaderService {
         fs.unlinkSync(tmp)
         return decryptedFilePath
       } catch (e) {
-        throw e
+        //throw e
         return 'symmetricDownloadFailed'
       }
     } else if (data.encryptionType === 'asymmetric') {
