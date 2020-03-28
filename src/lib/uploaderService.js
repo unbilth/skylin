@@ -1,13 +1,12 @@
 const skynet = require('@nebulous/skynet');
-const database = require('./store.js');
-const encryption = require('./encryption')
+const databaseService = require('./databaseService');
+const encryptorService = require('./encryptorService')
 const fs = require("fs");
 
+const db = new databaseService()
+const encryptor = new encryptorService()
 
-const db = new database()
-const pgp = new encryption()
-
-class Upload {
+class UploaderService {
 
   async uploadToSkynet(file) {
     const skylink = await skynet.UploadFile(
@@ -30,7 +29,7 @@ class Upload {
 
     } else if (data.encryptionType === 'symmetric') {
       try {
-        const encryptedFile = await pgp.symmetricEncryption(filePath, data.password)
+        const encryptedFile = await encryptor.symmetricEncryption(filePath, data.password)
         const skylink = await this.uploadToSkynet(encryptedFile)
         fs.unlinkSync(encryptedFile)
         db.add('history', { skylink: skylink, encryption: data.encryptionType, type: 'upload' })
@@ -40,7 +39,7 @@ class Upload {
       }
     } else if (data.encryptionType === 'asymmetric') {
       try {
-        const encryptedFile = await pgp.asymmetricEncryption(filePath, data.publicAddress)
+        const encryptedFile = await encryptor.asymmetricEncryption(filePath, data.publicAddress)
         const skylink = await this.uploadToSkynet(encryptedFile)
         fs.unlinkSync(encryptedFile)
         db.add('history', { skylink: skylink, encryption: data.encryptionType, type: 'upload' })
@@ -53,4 +52,4 @@ class Upload {
   }
 }
 
-module.exports = Upload;
+module.exports = UploaderService;

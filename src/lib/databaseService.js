@@ -2,7 +2,7 @@ const electron = require('electron');
 const path = require('path');
 const fs = require('fs');
 
-class Store {
+class Database {
 
   constructor() {
     this.userDataPath = (electron.app).getPath('userData');
@@ -223,4 +223,4 @@ function parseDataFile(filePath, defaults) {
 }
 
 
-module.exports = Store;
+module.exports = Database;

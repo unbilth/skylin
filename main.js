@@ -1,15 +1,15 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const url = require('url');
-const encryption = require('./encryption')
-const database = require('./store')
-const upload = require('./upload')
-const download = require('./download')
+const encryptorService = require('./src/lib/encryptorService')
+const databaseService = require('./src/lib/databaseService')
+const uploaderService = require('./src/lib/uploaderService')
+const downloaderService = require('./src/lib/downloaderService')
 
-const db = new database()
-const pgp = new encryption()
-const uploader = new upload()
-const downloader = new download()
+const db = new databaseService()
+const encryptor = new encryptorService()
+const uploader = new uploaderService()
+const downloader = new downloaderService()
 
 let mainWindow
 let dev = false
@@ -22,7 +22,7 @@ if (process.defaultApp || /[\\/]electron-prebuilt[\\/]/.test(process.execPath) |
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1024,
-    height: 768, 
+    height: 768,
     show: false,
     webPreferences: {
       nodeIntegration: true
@@ -125,7 +125,7 @@ ipcMain.on('download', (event, data, skylink) => {
 })
 
 ipcMain.on('postPublicKey', (event, passphrase) => {
-  pgp.generatePgpKeys(passphrase).then(() => {
+  encryptor.generatePgpKeys(passphrase).then(() => {
     event.reply('NewPublicKey')
   })
 })

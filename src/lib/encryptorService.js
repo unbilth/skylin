@@ -1,10 +1,10 @@
 const fs = require("fs");
 const openpgp = require("openpgp");
-const database = require('./store.js');
-const db = new database()
+const databaseService = require('./databaseService');
+const db = new databaseService()
 const homeDirectory = process.env['HOME']
 
-class Encryption {
+class EncryptorService {
 
   async generatePgpKeys(passphrase) {
     const keys = await openpgp.generateKey({
@@ -98,4 +98,4 @@ function UUID() {
   return uuid;
 }
 
-module.exports = Encryption;
+module.exports = EncryptorService;

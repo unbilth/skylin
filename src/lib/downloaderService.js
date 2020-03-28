@@ -1,13 +1,13 @@
 const skynet = require('@nebulous/skynet');
-const database = require('./store.js');
-const encryption = require('./encryption')
+const databaseService = require('./databaseService');
+const encryptorService = require('./encryptorService')
 const fs = require("fs")
 
-const db = new database()
-const pgp = new encryption()
+const db = new databaseService()
+const encryptor = new encryptorService()
 const homeDirectory = process.env['HOME']
 
-class Download {
+class DownloaderService {
 
   async downloadFromSkynet(skylink, destination) {
     await skynet.DownloadFile(
@@ -33,7 +33,7 @@ class Download {
       try {
         const tmp = homeDirectory + '/Downloads/encryped_file' + UUID()
         await this.downloadFromSkynet(data.skylink, tmp)
-        const decrypt = await pgp.symmetricDecryption(tmp, data.password)
+        const decrypt = await encryptor.symmetricDecryption(tmp, data.password)
         const decryptedFilePath = homeDirectory + '/Downloads/decrypted_file' + UUID()
         fs.writeFileSync(decryptedFilePath, decrypt)
         db.add('history', { skylink: data.skylink, encryption: data.encryptionType, type: 'download' })
@@ -50,7 +50,7 @@ class Download {
         await this.downloadFromSkynet(data.skylink, tmp)
         fs.readFileSync(tmp)
 
-        const decrypt = await pgp.asymmetricDecryption(tmp, currentKeys.privateKey, data.privateKeyPassphrase)
+        const decrypt = await encryptor.asymmetricDecryption(tmp, currentKeys.privateKey, data.privateKeyPassphrase)
         const decryptedFilePath = homeDirectory + '/Downloads/decrypted_file' + UUID()
         fs.writeFileSync(decryptedFilePath, decrypt)
         db.add('history', { skylink: data.skylink, encryption: data.encryptionType, type: 'download' })
@@ -65,7 +65,7 @@ class Download {
 
 }
 
-module.exports = Download
+module.exports = DownloaderService
 
 function UUID() {
   var dt = new Date().getTime();
