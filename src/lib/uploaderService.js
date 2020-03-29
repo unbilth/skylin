@@ -13,8 +13,8 @@ class UploaderService {
       file,
       skynet.DefaultUploadOptions
     ).then((res) => {
-      console.log(res)
       db.add('history', { skylink: res, encryption: encryptionType, type: 'upload' })
+      return res
     })
     return skylink
   }

@@ -19,14 +19,15 @@ const ipcMainHandler = (() => {
       if (filePath) {
         event.reply('reply', 'pong')
         uploader.uploadFile(filePath, data).then((res) => {
-          if(res === 'symmetricUploadFailed') {
-            event.reply('symmetricUploadFailed')
-          } else if(res === 'asymmetricUploadFailed') {
-            event.reply('asymmetricUploadFailed')
-          } else if(res === 'noneUploadFailed') {
-            event.reply('noneUploadFailed')
-          } else {
-            event.reply('successful upload', res)
+          switch(res) {
+            case 'symmetricUploadFailed':
+              event.reply('symmetricUploadFailed')
+            case 'asymmetricUploadFailed':
+              event.reply('asymmetricUploadFailed')
+            case 'noneUploadFailed':
+              event.reply('noneUploadFailed')
+            default:
+              event.reply('successful upload', res)
           }
         })
       }
@@ -36,14 +37,15 @@ const ipcMainHandler = (() => {
   ipcMain.on('download', (event, data, skylink) => {
     event.reply('download reply', 'pong')
     downloader.downloadFile(data).then((res) => {
-        if(res === 'symmetricDownloadFailed') {
-        event.reply('symmetricDownloadFailed')
-      } else if(res === 'asymmetricDownloadFailed') {
-        event.reply('asymmetricDownloadFailed')
-      } else if(res === 'noneDownloadFailed') {
-        event.reply('noneDownloadFailed')
-      } else {
-        event.reply('successful download', res)
+      switch(res) {
+        case 'symmetricDownloadFailed':
+          event.reply('symmetricDownloadFailed')
+        case 'asymmetricDownloadFailed':
+          event.reply('asymmetricDownloadFailed')
+        case 'noneDownloadFailed':
+          event.reply('noneDownloadFailed')
+        default:
+          event.reply('successful download', res)
       }
     })
   })
