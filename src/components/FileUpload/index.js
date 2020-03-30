@@ -22,23 +22,18 @@ class FileUpload extends React.Component {
     if (this.state.symmetricChecked) {
       this.showPasswordDrawer()
     } else if (this.state.asymmetricChecked) {
-      console.log('asymmetric')
-      //this.props.onClick('asymmetric')
       this.showPublicAddressDrawer()
     } else {
-      console.log('none')
       this.props.onClick('none')
     }
   }
 
   symmetricChecked(checkbox) {
     if (checkbox) {
-      console.log('checked')
       this.setState({
         symmetricChecked: true,
       });
     } else {
-      console.log('uncheck')
       this.setState({
         symmetricChecked: false,
       });
@@ -47,12 +42,10 @@ class FileUpload extends React.Component {
 
   asymmetricChecked(checkbox) {
     if (checkbox) {
-      console.log('checked')
       this.setState({
         asymmetricChecked: true,
       });
     } else {
-      console.log('uncheck')
       this.setState({
         asymmetricChecked: false,
       });
@@ -66,7 +59,7 @@ class FileUpload extends React.Component {
   };
 
   onFinishPasswordDrawer(values) {
-    this.props.setSymmetricPasssword(values.password, 'symmetric')
+    this.props.setSymmetricPasssword(values.password)
     this.props.onClick('symmetric')
   };
 
@@ -83,7 +76,6 @@ class FileUpload extends React.Component {
   };
 
   onFinishPublicAddressDrawer(values) {
-    console.log(values)
     this.props.onClick('asymmetric', values.publicAddress)
   };
 

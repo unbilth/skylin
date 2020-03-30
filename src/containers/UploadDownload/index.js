@@ -1,27 +1,25 @@
 import React from 'react'
 
-import './style.css'
-import 'antd/dist/antd.css';
 import FileUpload from '../../components/FileUpload'
 import FileDownload from '../../components/FileDownload'
 import { Row, Col, Spin, Modal, message, notification } from 'antd';
 
+import './style.css'
+import 'antd/dist/antd.css';
+
 const { ipcRenderer } = window.require("electron");
-const { confirm } = Modal;
 
 class UploadDownload extends React.Component {
   _isMounted = false
   constructor(props) {
     super(props)
     this.state = {
-      loading: false,
       downloadLoading: false,
-      symmetricPassword: null,
-      encryptionType: null,
+      loading: false,
       addFav: false,
+      addFavModal: false,
       favoriteSkylink: null,
-      encryptionMethod: null,
-      addFavModal: false
+      symmetricPassword: null
     }
   }
 
@@ -29,69 +27,66 @@ class UploadDownload extends React.Component {
     this._isMounted = true
 
     if(this._isMounted) {
-      ipcRenderer.on('reply', (event, messages) => {
+      ipcRenderer.on('reply', () => {
         this.setState({ loading: true })
       })
   
-      ipcRenderer.on('download reply', (event, messages) => {
+      ipcRenderer.on('download reply', () => {
         this.setState({ downloadLoading: true })
       })
   
-      ipcRenderer.on('successful upload', (event, res) => {
+      ipcRenderer.on('successful upload', (e, res) => {
         this.setState({
           loading: false,
           addFavModal: true,
-          favoriteSkylink: res.skylink,
-          encryptionMethod: res.encryption
+          favoriteSkylink: res.skylink
         }, () => {
-          this.successFulUpload()
+          this.successFullUpload()
         })
       })
   
-      ipcRenderer.on('successful download', (event, res) => {
+      ipcRenderer.on('successful download', (e, res) => {
         this.setState({
           downloadLoading: false,
           encryptionMethod: res.encryption
         },() => {
-          this.successFulDownload()
+          this.successFullDownload()
         })
       })
 
-      ipcRenderer.on('noneUploadFailed', (e) => {
+      ipcRenderer.on('noneUploadFailed', () => {
         this.setState({ loading: false }, () => {
-          this.noneUploadFailed()
+          this.uploadFileFailed()
         });
       })
 
-      ipcRenderer.on('symmetricUploadFailed', (e) => {
+      ipcRenderer.on('symmetricUploadFailed', () => {
         this.setState({ loading: false }, () => {
-          this.symmetricUploadFailed()
+          this.uploadsymmetricFileFailed()
         });
       })
 
-      ipcRenderer.on('asymmetricUploadFailed', (e) => {
-  
+      ipcRenderer.on('asymmetricUploadFailed', () => {
         this.setState({ loading: false }, () => {
-          this.asymmetricUploadFailed()
+          this.uploadAsymmetricFileFailed()
         });
       })
 
-      ipcRenderer.on('noneDownloadFailed', (e) => {
+      ipcRenderer.on('noneDownloadFailed', () => {
         this.setState({ downloadLoading: false }, () => {
-          this.noneDownloadFailed()
+          this.downloadFileFailed()
         });
       })
   
-      ipcRenderer.on('symmetricDownloadFailed', (e) => {
+      ipcRenderer.on('symmetricDownloadFailed', () => {
         this.setState({ downloadLoading: false }, () => {
-          this.symmetricDownloadFailed()
+          this.downloadSymmetricFileFailed()
         });
       })
 
-      ipcRenderer.on('asymmetricDownloadFailed', (e) => {
-  
+      ipcRenderer.on('asymmetricDownloadFailed', () => {
         this.setState({ downloadLoading: false }, () => {
-          this.asymmetricDownloadFailed()
+          this.downloadAsymmetricFileFailed()
         });
       })
     }
@@ -102,14 +97,14 @@ class UploadDownload extends React.Component {
     ipcRenderer.removeAllListeners()
   }
 
-  successFulDownload() {
+  successFullDownload() {
     notification['success']({
       message: 'Successful download',
       description: 'Your file has been downloaded successfully. The file is in your /Downloads directory.',
     });
   };
 
-  successFulUpload() {
+  successFullUpload() {
     notification['success']({
       message: 'Successful upload',
       description: 'Your file has been uploaded successfully.',
@@ -117,7 +112,7 @@ class UploadDownload extends React.Component {
   };
 
   setSymmetricPassword(password) {
-    this.setState({symmetricPassword: password, encryptionType: 'symmetric'})
+    this.setState({symmetricPassword: password})
   }
 
   setSkylink(skylink) {
@@ -136,73 +131,77 @@ class UploadDownload extends React.Component {
     message.error("You don't have a public key. Generate your pgp keys and try again", 10);
   };
 
-  noneUploadFailed() {
+  uploadFileFailed() {
     message.error("We advise you not to exceed 1 gigabyte per file. Try again if it still doesn't work. Try again later.", 10);
   };
 
-  symmetricUploadFailed() {
+  uploadSymmetricFileFailed() {
     message.error("It seems that an error has occurred. Make sure you type a password, we advise you not to exceed 1 gigabyte per file.", 10);
   };
 
-  asymmetricUploadFailed() {
+  uploadAsymmetricFileFailed() {
     message.error("It seems that an error has occurred, Make sure you type a passphrase and have previously generated at least one public key. We advise you not to exceed 1 gigabyte per file.", 10);
   };
 
-  noneDownloadFailed() {
+  downloadFileFailed() {
     message.error("Try again if it still doesn't work. Try again later.", 10);
   };
 
-  symmetricDownloadFailed() {
+  downloadSymmetricFileFailed() {
     message.error("It seems that an error has occurred, it may be due to a wrong password or a file that is not symmetrically encrypted.", 10);
   };
 
-  asymmetricDownloadFailed() {
+  downloadAsymmetricFileFailed() {
     message.error("It seems that an error has occurred, it may be due to a wrong passphrase or a file that is not asymmetrically encrypted. If you don't have a public key generate one and try again with another skylink.", 10);
   };
 
   ipcAddFav(fav) {
     ipcRenderer.send('postFav', fav)
     this.setState({ addFavModal: false, favoriteSkylink: null, encryptionType: null })
-
   }
 
-  uploadClick(encryptionType, publicAddress) {    
-    if(encryptionType === 'symmetric') {
-      ipcRenderer.send('upload', {
-        encryptionType: encryptionType,
-        password: this.state.symmetricPassword
-      })
-    } else if(encryptionType === 'asymmetric'){
-      ipcRenderer.send('upload', {
-        encryptionType: encryptionType,
-        publicAddress: publicAddress
-      })
-    } else {
-      ipcRenderer.send('upload', {
-        encryptionType: encryptionType
-      })
+  uploadClick(encryptionType, publicAddress) {  
+    switch(encryptionType){
+      case 'symmetric':
+        ipcRenderer.send('upload', {
+          encryptionType: encryptionType,
+          password: this.state.symmetricPassword
+        })
+        break
+      case 'asymmetric':
+        ipcRenderer.send('upload', {
+          encryptionType: encryptionType,
+          publicAddress: publicAddress
+        })
+        break
+      default:
+        ipcRenderer.send('upload', {
+          encryptionType: encryptionType
+        })
     }
   }
 
-  downloadClick(encryptionType, skylink, privateKeyPassphrase) {    
-    if(encryptionType === 'symmetric') {
-      ipcRenderer.send('download', {
-        encryptionType: encryptionType,
-        skylink: skylink,
-        password: this.state.symmetricPassword
-      })
-    } else if(encryptionType === 'asymmetric'){      
-      ipcRenderer.send('download', {
-        encryptionType: encryptionType,
-        skylink: skylink,
-        privateKeyPassphrase: privateKeyPassphrase
-      })
-      
-    } else {
-      ipcRenderer.send('download', {
-        encryptionType: encryptionType,
-        skylink: skylink
-      })
+  downloadClick(encryptionType, skylink, privateKeyPassphrase) {
+    switch(encryptionType){
+      case 'symmetric':
+        ipcRenderer.send('download', {
+          encryptionType: encryptionType,
+          skylink: skylink,
+          password: this.state.symmetricPassword
+        })
+        break
+      case 'asymmetric':
+        ipcRenderer.send('download', {
+          encryptionType: encryptionType,
+          skylink: skylink,
+          privateKeyPassphrase: privateKeyPassphrase
+        })
+        break
+      default:
+        ipcRenderer.send('download', {
+          encryptionType: encryptionType,
+          skylink: skylink
+        })
     }
   }
 
