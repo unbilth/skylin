@@ -22,10 +22,13 @@ const ipcMainHandler = (() => {
           switch(res) {
             case 'symmetricUploadFailed':
               event.reply('symmetricUploadFailed')
+              break
             case 'asymmetricUploadFailed':
               event.reply('asymmetricUploadFailed')
+              break
             case 'noneUploadFailed':
               event.reply('noneUploadFailed')
+              break
             default:
               event.reply('successful upload', res)
           }
@@ -40,10 +43,13 @@ const ipcMainHandler = (() => {
       switch(res) {
         case 'symmetricDownloadFailed':
           event.reply('symmetricDownloadFailed')
+          break
         case 'asymmetricDownloadFailed':
           event.reply('asymmetricDownloadFailed')
+          break
         case 'noneDownloadFailed':
           event.reply('noneDownloadFailed')
+          break
         default:
           event.reply('successful download', res)
       }

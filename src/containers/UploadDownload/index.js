@@ -3,6 +3,15 @@ import React from 'react'
 import FileUpload from '../../components/FileUpload'
 import FileDownload from '../../components/FileDownload'
 import { Row, Col, Spin, Modal, message, notification } from 'antd';
+import { 
+  noKeys, 
+  uploadFileFailed, 
+  uploadSymmetricFileFailed, 
+  uploadAsymmetricFileFailed,
+  downloadFileFailed, 
+  downloadSymmetricFileFailed, 
+  downloadAsymmetricFileFailed 
+} from '../../lib/errorMessages'
 
 import './style.css'
 import 'antd/dist/antd.css';
@@ -56,37 +65,37 @@ class UploadDownload extends React.Component {
 
       ipcRenderer.on('noneUploadFailed', () => {
         this.setState({ loading: false }, () => {
-          this.uploadFileFailed()
+          uploadFileFailed()
         });
       })
 
       ipcRenderer.on('symmetricUploadFailed', () => {
         this.setState({ loading: false }, () => {
-          this.uploadsymmetricFileFailed()
+          uploadSymmetricFileFailed()
         });
       })
 
       ipcRenderer.on('asymmetricUploadFailed', () => {
         this.setState({ loading: false }, () => {
-          this.uploadAsymmetricFileFailed()
+          uploadAsymmetricFileFailed()
         });
       })
 
       ipcRenderer.on('noneDownloadFailed', () => {
         this.setState({ downloadLoading: false }, () => {
-          this.downloadFileFailed()
+          downloadFileFailed()
         });
       })
   
       ipcRenderer.on('symmetricDownloadFailed', () => {
         this.setState({ downloadLoading: false }, () => {
-          this.downloadSymmetricFileFailed()
+          downloadSymmetricFileFailed()
         });
       })
 
       ipcRenderer.on('asymmetricDownloadFailed', () => {
         this.setState({ downloadLoading: false }, () => {
-          this.downloadAsymmetricFileFailed()
+          downloadAsymmetricFileFailed()
         });
       })
     }
@@ -126,34 +135,6 @@ class UploadDownload extends React.Component {
   cancelFav() {
     this.setState({favoriteSkylink: null})
   }
-
-  noKeys() {
-    message.error("You don't have a public key. Generate your pgp keys and try again", 10);
-  };
-
-  uploadFileFailed() {
-    message.error("We advise you not to exceed 1 gigabyte per file. Try again if it still doesn't work. Try again later.", 10);
-  };
-
-  uploadSymmetricFileFailed() {
-    message.error("It seems that an error has occurred. Make sure you type a password, we advise you not to exceed 1 gigabyte per file.", 10);
-  };
-
-  uploadAsymmetricFileFailed() {
-    message.error("It seems that an error has occurred, Make sure you type a passphrase and have previously generated at least one public key. We advise you not to exceed 1 gigabyte per file.", 10);
-  };
-
-  downloadFileFailed() {
-    message.error("Try again if it still doesn't work. Try again later.", 10);
-  };
-
-  downloadSymmetricFileFailed() {
-    message.error("It seems that an error has occurred, it may be due to a wrong password or a file that is not symmetrically encrypted.", 10);
-  };
-
-  downloadAsymmetricFileFailed() {
-    message.error("It seems that an error has occurred, it may be due to a wrong passphrase or a file that is not asymmetrically encrypted. If you don't have a public key generate one and try again with another skylink.", 10);
-  };
 
   ipcAddFav(fav) {
     ipcRenderer.send('postFav', fav)

@@ -28,6 +28,7 @@ class UploaderService {
         } catch (e) {
           return 'noneUploadFailed'
         }
+        break
       case 'symmetric':
         try {
           const encryptedFile = await encryptor.symmetricEncryption(filePath, data.password)
@@ -37,6 +38,7 @@ class UploaderService {
         } catch (e) {
           return 'symmetricUploadFailed'
         }
+        break
       case 'asymmetric':
         try {
           const encryptedFile = await encryptor.asymmetricEncryption(filePath, data.publicAddress)
@@ -47,6 +49,7 @@ class UploaderService {
           //throw e
           return 'asymmetricUploadFailed'
         }
+        break
     }
   } 
 }

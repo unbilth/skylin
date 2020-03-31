@@ -33,6 +33,7 @@ class DownloaderService {
           //throw e
           return 'noneDownloadFailed'
         }
+        break
       case 'symmetric':
         try {
           await this.downloadFromSkynet(data.skylink, 'symmetric', tmpFilePath)
@@ -44,6 +45,7 @@ class DownloaderService {
           //throw e
           return 'symmetricDownloadFailed'
         }
+        break
       case 'asymmetric':
         try{
           const currentKeys = db.get('currentKeys');
@@ -56,6 +58,7 @@ class DownloaderService {
           //throw e
           return 'asymmetricDownloadFailed'
         }
+        break
     }
   }
 }
