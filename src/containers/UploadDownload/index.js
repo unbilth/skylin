@@ -4,7 +4,6 @@ import FileUpload from '../../components/FileUpload'
 import FileDownload from '../../components/FileDownload'
 import { Row, Col, Spin, Modal, message, notification } from 'antd';
 import { 
-  noKeys, 
   uploadFileFailed, 
   uploadSymmetricFileFailed, 
   uploadAsymmetricFileFailed,
@@ -12,6 +11,8 @@ import {
   downloadSymmetricFileFailed, 
   downloadAsymmetricFileFailed 
 } from '../../lib/errorMessages'
+
+import { successFullUpload, successFullDownload } from '../../lib/successNotifications'
 
 import './style.css'
 import 'antd/dist/antd.css';
@@ -50,7 +51,7 @@ class UploadDownload extends React.Component {
           addFavModal: true,
           favoriteSkylink: res.skylink
         }, () => {
-          this.successFullUpload()
+          successFullUpload()
         })
       })
   
@@ -59,7 +60,7 @@ class UploadDownload extends React.Component {
           downloadLoading: false,
           encryptionMethod: res.encryption
         },() => {
-          this.successFullDownload()
+          successFullDownload()
         })
       })
 
@@ -105,20 +106,6 @@ class UploadDownload extends React.Component {
     this._isMounted = false
     ipcRenderer.removeAllListeners()
   }
-
-  successFullDownload() {
-    notification['success']({
-      message: 'Successful download',
-      description: 'Your file has been downloaded successfully. The file is in your /Downloads directory.',
-    });
-  };
-
-  successFullUpload() {
-    notification['success']({
-      message: 'Successful upload',
-      description: 'Your file has been uploaded successfully.',
-    });
-  };
 
   setSymmetricPassword(password) {
     this.setState({symmetricPassword: password})
