@@ -31,7 +31,7 @@ class DownloaderService {
           return downloadedFilePath
         } catch (e) {
           //throw e
-          return 'noneDownloadFailed'
+          return 'downloadFileFailed'
         }
         break
       case 'symmetric':
@@ -43,7 +43,7 @@ class DownloaderService {
           return downloadedFilePath
         } catch (e) {
           //throw e
-          return 'symmetricDownloadFailed'
+          return 'downloadSymmetricFileFailed'
         }
         break
       case 'asymmetric':
@@ -56,7 +56,7 @@ class DownloaderService {
           return downloadedFilePath
         } catch(e){
           //throw e
-          return 'asymmetricDownloadFailed'
+          return 'downloadAsymmetricFileFailed'
         }
         break
     }

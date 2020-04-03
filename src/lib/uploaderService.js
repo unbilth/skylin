@@ -26,7 +26,7 @@ class UploaderService {
           const skylink = await this.uploadToSkynet(filePath, data.encryptionType)
           return { skylink: skylink, encryption: data.encryptionType }
         } catch (e) {
-          return 'noneUploadFailed'
+          return 'uploadFileFailed'
         }
         break
       case 'symmetric':
@@ -36,7 +36,7 @@ class UploaderService {
           fs.unlinkSync(encryptedFile)
           return { skylink: skylink, encryption: data.encryptionType };
         } catch (e) {
-          return 'symmetricUploadFailed'
+          return 'uploadSymmetricFileFailed'
         }
         break
       case 'asymmetric':
@@ -47,7 +47,7 @@ class UploaderService {
           return { skylink: skylink, encryption: data.encryptionType }
         } catch (e) {
           //throw e
-          return 'asymmetricUploadFailed'
+          return 'uploadAsymmetricFileFailed'
         }
         break
     }

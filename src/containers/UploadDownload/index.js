@@ -2,7 +2,7 @@ import React from 'react'
 
 import FileUpload from '../../components/FileUpload'
 import FileDownload from '../../components/FileDownload'
-import { Row, Col, Spin, Modal, message, notification } from 'antd';
+import { Row, Col, Spin } from 'antd';
 import { 
   uploadFileFailed, 
   uploadSymmetricFileFailed, 
@@ -37,11 +37,11 @@ class UploadDownload extends React.Component {
     this._isMounted = true
 
     if(this._isMounted) {
-      ipcRenderer.on('reply', () => {
+      ipcRenderer.on('upload', () => {
         this.setState({ loading: true })
       })
   
-      ipcRenderer.on('download reply', () => {
+      ipcRenderer.on('download', () => {
         this.setState({ downloadLoading: true })
       })
   
@@ -64,37 +64,37 @@ class UploadDownload extends React.Component {
         })
       })
 
-      ipcRenderer.on('noneUploadFailed', () => {
+      ipcRenderer.on('uploadFileFailed', () => {
         this.setState({ loading: false }, () => {
           uploadFileFailed()
         });
       })
 
-      ipcRenderer.on('symmetricUploadFailed', () => {
+      ipcRenderer.on('uploadSymmetricFileFailed', () => {
         this.setState({ loading: false }, () => {
           uploadSymmetricFileFailed()
         });
       })
 
-      ipcRenderer.on('asymmetricUploadFailed', () => {
+      ipcRenderer.on('uploadAsymmetricFileFailed', () => {
         this.setState({ loading: false }, () => {
           uploadAsymmetricFileFailed()
         });
       })
 
-      ipcRenderer.on('noneDownloadFailed', () => {
+      ipcRenderer.on('downloadFileFailed', () => {
         this.setState({ downloadLoading: false }, () => {
           downloadFileFailed()
         });
       })
   
-      ipcRenderer.on('symmetricDownloadFailed', () => {
+      ipcRenderer.on('downloadSymmetricFileFailed', () => {
         this.setState({ downloadLoading: false }, () => {
           downloadSymmetricFileFailed()
         });
       })
 
-      ipcRenderer.on('asymmetricDownloadFailed', () => {
+      ipcRenderer.on('downloadAsymmetricFileFailed', () => {
         this.setState({ downloadLoading: false }, () => {
           downloadAsymmetricFileFailed()
         });

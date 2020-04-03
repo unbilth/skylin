@@ -17,17 +17,17 @@ const ipcMainHandler = (() => {
     }).then(result => {
       const filePath = result.filePaths[0]
       if (filePath) {
-        event.reply('reply', 'pong')
+        event.reply('upload', '')
         uploader.uploadFile(filePath, data).then((res) => {
           switch(res) {
-            case 'symmetricUploadFailed':
-              event.reply('symmetricUploadFailed')
+            case 'uploadSymmetricFileFailed':
+              event.reply('uploadSymmetricFileFailed')
               break
-            case 'asymmetricUploadFailed':
-              event.reply('asymmetricUploadFailed')
+            case 'uploadAsymmetricFileFailed':
+              event.reply('uploadAsymmetricFileFailed')
               break
-            case 'noneUploadFailed':
-              event.reply('noneUploadFailed')
+            case 'uploadFileFailed':
+              event.reply('uploadFileFailed')
               break
             default:
               event.reply('successful upload', res)
@@ -38,17 +38,17 @@ const ipcMainHandler = (() => {
   })
   
   ipcMain.on('download', (event, data, skylink) => {
-    event.reply('download reply', 'pong')
+    event.reply('download', '')
     downloader.downloadFile(data).then((res) => {
       switch(res) {
-        case 'symmetricDownloadFailed':
-          event.reply('symmetricDownloadFailed')
+        case 'downloadSymmetricFileFailed':
+          event.reply('downloadSymmetricFileFailed')
           break
-        case 'asymmetricDownloadFailed':
-          event.reply('asymmetricDownloadFailed')
+        case 'downloadAsymmetricFileFailed':
+          event.reply('downloadAsymmetricFileFailed')
           break
-        case 'noneDownloadFailed':
-          event.reply('noneDownloadFailed')
+        case 'downloadFileFailed':
+          event.reply('downloadFileFailed')
           break
         default:
           event.reply('successful download', res)
@@ -69,12 +69,12 @@ const ipcMainHandler = (() => {
   
   ipcMain.on('changeCurrentKeys', (event, id) => {
     db.changeCurrentKeys(id)
-    event.reply('changeCurrentKeys')
+    event.reply('CurrentKeysChanged')
   })
   
-  ipcMain.on('getMyPublicKey', (event, id) => {
+  ipcMain.on('getPublicKey', (event, id) => {
     const publicKey = db.getMyPublicKey(id)
-    event.reply('myPublicKey', publicKey)
+    event.reply('publicKey', publicKey)
   })
   
   ipcMain.on('deleteFavorite', (event, id) => {

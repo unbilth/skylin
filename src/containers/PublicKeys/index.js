@@ -52,7 +52,7 @@ class PublicKeys extends React.Component {
 
   successChangedKey() {
     Modal.success({
-      content: 'You are now using a new public key',
+      content: 'Public key changed',
     });
   }
 
@@ -67,7 +67,7 @@ class PublicKeys extends React.Component {
   openNotificationKeysGenerated() {
     notification['success']({
       message: 'Successful',
-      description: 'Your public key generated.',
+      description: 'Public key generated',
     });
     this.setState({ publicKeys: [] })
   };
