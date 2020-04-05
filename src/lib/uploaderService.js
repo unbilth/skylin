@@ -1,5 +1,6 @@
 const fs = require("fs");
-const skynet = require('@nebulous/skynet');
+//const skynet = require('@nebulous/skynet');
+const skynet = require('./skynetService');
 const databaseService = require('./databaseService');
 const encryptorService = require('./encryptorService')
 
@@ -28,7 +29,6 @@ class UploaderService {
         } catch (e) {
           return 'uploadFileFailed'
         }
-        break
       case 'symmetric':
         try {
           const encryptedFile = await encryptor.symmetricEncryption(filePath, data.password)
@@ -38,7 +38,6 @@ class UploaderService {
         } catch (e) {
           return 'uploadSymmetricFileFailed'
         }
-        break
       case 'asymmetric':
         try {
           const encryptedFile = await encryptor.asymmetricEncryption(filePath, data.publicAddress)
@@ -49,7 +48,6 @@ class UploaderService {
           //throw e
           return 'uploadAsymmetricFileFailed'
         }
-        break
     }
   } 
 }

@@ -18,36 +18,46 @@ class EncryptorService {
   }
 
   async symmetricEncryption(filePath, password) {
-
+    
     try {
+      const fileExtension = filePath.split('.').pop();
+      const filePathSplited = filePath.split('.')[0].split('/');
+      const filename = filePathSplited[filePathSplited.length - 1] + '{' + fileExtension + '}'
       const fileData = fs.readFileSync(filePath)
+
       const { message } = await openpgp.encrypt({
         message: openpgp.message.fromBinary(fileData),
         passwords: [password],
         armor: false
       });
       const encryptedFile = message.packets.write();
-      const encryptedFilePath = homeDirectory + '/Downloads/encryped_file' + UUID()
+      const encryptedFilePath = homeDirectory + '/Downloads/' + filename
       fs.writeFileSync(encryptedFilePath, encryptedFile)
       return encryptedFilePath
     } catch (e) {
       throw e
     }
+    
   }
 
   async asymmetricEncryption(filePath, publicAddress) {
     try {
+
+      const fileExtension = filePath.split('.').pop();
+      const filePathSplited = filePath.split('.')[0].split('/');
+      const filename = filePathSplited[filePathSplited.length - 1] + '{' + fileExtension + '}'
       const fileData = fs.readFileSync(filePath)
+      
       const { message } = await openpgp.encrypt({
         message: openpgp.message.fromBinary(fileData),
         publicKeys: (await openpgp.key.readArmored(publicAddress)).keys,
         armor: false
       });
 
-      const encryptedFile = message.packets.write()
-      const encryptedFilePath = homeDirectory + '/Downloads/encryped_file' + UUID()
+      const encryptedFile = message.packets.write();
+      const encryptedFilePath = homeDirectory + '/Downloads/' + filename
 
-      fs.writeFileSync(encryptedFilePath, encryptedFile)
+      fs.writeFileSync(encryptedFilePath, encryptedFile)      
       return encryptedFilePath
 
     } catch (e) {
@@ -56,7 +66,6 @@ class EncryptorService {
   }
 
   async symmetricDecryption(filePath, password) {
-
     const encrypted = fs.readFileSync(filePath)
 
     const { data: decrypted } = await openpgp.decrypt({

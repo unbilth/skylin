@@ -1,5 +1,6 @@
 const fs = require("fs")
-const skynet = require('@nebulous/skynet');
+//const skynet = require('@nebulous/skynet');
+const skynet = require('./skynetService');
 const databaseService = require('./databaseService');
 const encryptorService = require('./encryptorService')
 
@@ -11,18 +12,19 @@ const homeDirectory = process.env['HOME']
 class DownloaderService {
 
   async downloadFromSkynet(skylink, encryptionType, destination) {
-    await skynet.DownloadFile(
+    return await skynet.DownloadFile(
       destination,
       skylink,
       skynet.DefaultDownloadOptions
-    ).then(() => {
+    ).then((res) => {
       db.add('history', { skylink: skylink, encryption: encryptionType, type: 'download' })
+      return res
     });
   }
 
   async downloadFile(data) {
-    const downloadedFilePath = homeDirectory + '/Downloads/siaFile' + UUID()
-    const tmpFilePath = homeDirectory + '/Downloads/encryped_file' + UUID()
+    const downloadedFilePath = homeDirectory + '/Downloads/'
+    const tmpFilePath = homeDirectory + '/Downloads/'
 
     switch(data.encryptionType) {
       case 'none':
@@ -33,44 +35,47 @@ class DownloaderService {
           //throw e
           return 'downloadFileFailed'
         }
-        break
       case 'symmetric':
         try {
-          await this.downloadFromSkynet(data.skylink, 'symmetric', tmpFilePath)
-          const decrypt = await encryptor.symmetricDecryption(tmpFilePath, data.password)
-          fs.writeFileSync(downloadedFilePath, decrypt)
-          fs.unlinkSync(tmpFilePath)
-          return downloadedFilePath
+          const filename = await this.downloadFromSkynet(data.skylink, 'symmetric', tmpFilePath)
+          const fileExtension = filename.match((/\{([^}]+)\}/))[1]
+          const formattedFileName = filename.replace(/\{([^}]+)\}/g, '');
+          const decrypt = await encryptor.symmetricDecryption(tmpFilePath + filename, data.password)
+          fs.writeFileSync(downloadedFilePath + formattedFileName, decrypt)
+
+          fs.rename(downloadedFilePath + formattedFileName, downloadedFilePath + formattedFileName + '.' + fileExtension, function(err) {
+            if ( err ) console.log('ERROR: ' + err);
+          });
+          fs.unlinkSync(tmpFilePath + filename)
+
+          return downloadedFilePath + formattedFileName + '.' + fileExtension
         } catch (e) {
           //throw e
           return 'downloadSymmetricFileFailed'
         }
-        break
+        
+
       case 'asymmetric':
         try{
           const currentKeys = db.get('currentKeys');
-          await this.downloadFromSkynet(data.skylink, 'asymmetric', tmpFilePath)
-          const decryptedFile = await encryptor.asymmetricDecryption(tmpFilePath, currentKeys.privateKey, data.privateKeyPassphrase)
-          fs.writeFileSync(downloadedFilePath, decryptedFile)
-          fs.unlinkSync(tmpFilePath)
-          return downloadedFilePath
+          const filename = await this.downloadFromSkynet(data.skylink, 'asymmetric', tmpFilePath)
+          const fileExtension = filename.match((/\{([^}]+)\}/))[1]
+          const formattedFileName = filename.replace(/\{([^}]+)\}/g, '');
+          const decryptedFile = await encryptor.asymmetricDecryption(tmpFilePath + filename, currentKeys.privateKey, data.privateKeyPassphrase)
+          
+          fs.writeFileSync(downloadedFilePath + formattedFileName, decryptedFile)
+          fs.unlinkSync(tmpFilePath + filename)
+          fs.rename(downloadedFilePath + formattedFileName, downloadedFilePath + formattedFileName + '.' + fileExtension, function(err) {
+            if ( err ) console.log('ERROR: ' + err);
+          });
+
+          return downloadedFilePath + formattedFileName + '.' + fileExtension
         } catch(e){
           //throw e
           return 'downloadAsymmetricFileFailed'
         }
-        break
     }
   }
 }
 
 module.exports = DownloaderService
-
-function UUID() {
-  var dt = new Date().getTime();
-  var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    var r = (dt + Math.random() * 16) % 16 | 0;
-    dt = Math.floor(dt / 16);
-    return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-  });
-  return uuid;
-}

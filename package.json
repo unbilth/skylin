@@ -15,8 +15,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "antd": "^4.0.1",
     "@nebulous/skynet": "^1.0.1",
+    "antd": "^4.0.1",
+    "axios": "^0.19.2",
+    "form-data": "^3.0.0",
     "openpgp": "^4.10.1",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",

@@ -37,7 +37,7 @@ const ipcMainHandler = (() => {
     })
   })
   
-  ipcMain.on('download', (event, data, skylink) => {
+  ipcMain.on('download', (event, data) => {
     event.reply('download', '')
     downloader.downloadFile(data).then((res) => {
       switch(res) {
